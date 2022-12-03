@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import LoadingSpinner from "../common/LoadingSpinner";
-import FlickrApi from "../api/FlickrApi";
+import { Link } from "react-router-dom";
+import LoadingSpinner from "../../common/LoadingSpinner";
+import FlickrApi from "../../api/FlickrApi";
 import "./PhotoDetail.css";
 
 const PhotoDetail = ({ id, closePhoto }) => {
@@ -44,14 +45,14 @@ const PhotoDetail = ({ id, closePhoto }) => {
 
 	return (
 		<div
-			className="photoBackground"
+			className="photo-background"
 			ref={photoBackgroundRef}
 			onClick={closeBackgroundClick}>
 			<button className="close-modal" onClick={closePhoto}>
 				X
 			</button>
 			<div className="container col-md-10 offset-md-2">
-				<div className="card photoDetailContent">
+				<div className="card photo-detail-content">
 					<div className="card-body">
 						<h6 className="card-title"></h6>
 						<img
@@ -59,6 +60,13 @@ const PhotoDetail = ({ id, closePhoto }) => {
 							src={`https://live.staticflickr.com/${photoData.server}/${photoData.id}_${photoData.secret}.jpg`}
 							alt=""
 						/>
+						<Link
+							to="/photos/upload"
+							state={{
+								image: `https://live.staticflickr.com/${photoData.server}/${photoData.id}_${photoData.secret}.jpg`,
+							}}>
+							Crop
+						</Link>
 					</div>
 				</div>
 			</div>

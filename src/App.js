@@ -6,8 +6,9 @@ import LoadingSpinner from "./common/LoadingSpinner";
 import useLocalStorage from "./hooks/useLocalStorage";
 import WallPepperApi from "./api/WallPepperApi";
 import { decodeToken } from "react-jwt";
-import Navbar from "./Navbar/Navbar";
-import UserContext from "./auth/UserContext";
+import Navbar from "./components/Navbar/Navbar";
+import UserContext from "./components/auth/UserContext";
+import PhotoCrop from "./components/crop/PhotoCrop";
 
 export const TOKEN_STORAGE_ID = "wallpepper-token";
 

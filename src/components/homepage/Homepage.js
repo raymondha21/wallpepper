@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import FlickrApi from "../api/FlickrApi";
-import SearchForm from "../common/SearchForm";
-import LoadingSpinner from "../common/LoadingSpinner";
+import FlickrApi from "../../api/FlickrApi";
+import SearchForm from "../../common/SearchForm";
+import LoadingSpinner from "../../common/LoadingSpinner";
 import PhotoCard from "../photos/PhotoCard";
 import "./Homepage.css";
 import PhotoDetail from "../photos/PhotoDetail";
@@ -12,12 +12,12 @@ const Homepage = () => {
 	const [photoId, setPhotoId] = useState(null);
 
 	const getRecent = async () => {
-		let pictures = await FlickrApi.getRecent();
-		setPhotoData(pictures);
+		let picData = await FlickrApi.getRecent();
+		setPhotoData(picData);
 	};
 	const search = async (searchTerm) => {
-		let pictures = await FlickrApi.search(searchTerm);
-		setPhotoData(pictures);
+		let picData = await FlickrApi.search(searchTerm);
+		setPhotoData(picData);
 	};
 
 	const getPhotoModal = (id) => {

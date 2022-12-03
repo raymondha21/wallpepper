@@ -3,7 +3,7 @@ import React from "react";
 const PhotoCard = ({ server, id, secret, getPhotoModal }) => {
 	return (
 		<div
-			className="PhotoCard card d-inline-block"
+			className="PhotoCard card d-inline-block m-1"
 			onClick={() => getPhotoModal(id)}>
 			<div className="card-body">
 				<h6 className="card-title">

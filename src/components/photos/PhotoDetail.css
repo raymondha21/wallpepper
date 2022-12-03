@@ -24,7 +24,7 @@ body.active-modal {
    background: rgba(49, 49, 49, 0.8);
 }
 
-.modal-content {
+.photoDetailContent {
    position: absolute;
    top: 40%;
    left: 50%;
