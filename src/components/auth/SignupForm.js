@@ -111,7 +111,7 @@ function SignupForm({ signup }) {
 								/>
 							</div>
 
-							{formErrors.length ? (
+							{formErrors ? (
 								<Alert type="danger" messages={formErrors} />
 							) : null}
 

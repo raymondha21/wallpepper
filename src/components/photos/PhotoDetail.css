@@ -9,7 +9,7 @@ body.active-modal {
    font-size: 18px;
 }
 
-.photoBackground {
+.photo-background {
    width: 100vw;
    height: 100vh;
    top: 0;
@@ -18,13 +18,10 @@ body.active-modal {
    bottom: 0;
    z-index: 2;
    position: fixed;
-}
-
-.photoBackground {
    background: rgba(49, 49, 49, 0.8);
 }
 
-.photoDetailContent {
+.photo-detail-content {
    position: absolute;
    top: 40%;
    left: 50%;

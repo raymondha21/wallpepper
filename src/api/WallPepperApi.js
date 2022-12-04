@@ -9,53 +9,57 @@ const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
  */
 
 class WallPepperApi {
-  // the token for interactive with the API will be stored here.
-  static token;
+	// the token for interactive with the API will be stored here.
+	static token;
 
-  static async request(endpoint, data = {}, method = "get") {
-    console.debug("API Call:", endpoint, data, method);
+	static async request(endpoint, data = {}, method = "get") {
+		console.debug("API Call:", endpoint, data, method);
 
-    //there are multiple ways to pass an authorization token, this is how you pass it in the header.
-    //this has been provided to show you another way to pass the token. you are only expected to read this code for this project.
-    const url = `${BASE_URL}/${endpoint}`;
-    const headers = { Authorization: `Bearer ${WallPepperApi.token}` };
-    const params = (method === "get")
-        ? data
-        : {};
+		//there are multiple ways to pass an authorization token, this is how you pass it in the header.
+		//this has been provided to show you another way to pass the token. you are only expected to read this code for this project.
+		const url = `${BASE_URL}/${endpoint}`;
+		const headers = { Authorization: `Bearer ${WallPepperApi.token}` };
+		const params = method === "get" ? data : {};
 
-    try {
-      return (await axios({ url, method, data, params, headers })).data;
-    } catch (err) {
-      console.error("API Error:", err.response);
-      let message = err.response.data.error.message;
-      throw Array.isArray(message) ? message : [message];
-    }
-  }
+		try {
+			return (await axios({ url, method, data, params, headers })).data;
+		} catch (err) {
+			console.error("API Error:", err.response);
+			let message = err.response.data.error.message;
+			throw Array.isArray(message) ? message : [message];
+		}
+	}
 
-  // Individual API routes
-  
-  // Get info on current user
-  static async getCurrentUser(user) {
-    let res = await this.request(`users/${user}`);
-    return res.user;
-  }
+	// Individual API routes
 
-  // Sign up 
-  static async signup(data) {
-    let res = await this.request(`auth/register`, data, "post");
-    return res.token;
-  }
+	// Get info on current user
+	static async getCurrentUser(user) {
+		let res = await this.request(`users/${user}`);
+		return res.user;
+	}
 
-  // Login
-  static async login(data) {
-    let res = await this.request('auth/token', data, "post");
-    return res.token;
-  }
-  // Edit profile save
-  static async saveProfile(username,data) {
-    let res = await this.request(`users/${username}`, data, "patch");
-    return res.user;
-  }
+	// Sign up
+	static async signup(data) {
+		let res = await this.request(`auth/register`, data, "post");
+		return res.token;
+	}
+
+	// Login
+	static async login(data) {
+		let res = await this.request("auth/token", data, "post");
+		return res.token;
+	}
+
+	// Edit profile save
+	static async saveProfile(user, data) {
+		let res = await this.request(`users/${user}`, data, "patch");
+		return res.user;
+	}
+
+	// Add picture to likes
+	static async like(user, url) {
+		await this.request(`users/${user}/likes`, { url }, "post");
+	}
 }
 
-export default WallPepperApi; 
+export default WallPepperApi;

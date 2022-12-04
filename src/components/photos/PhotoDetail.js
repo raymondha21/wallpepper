@@ -1,13 +1,26 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback, useContext } from "react";
 import { Link } from "react-router-dom";
 import LoadingSpinner from "../../common/LoadingSpinner";
 import FlickrApi from "../../api/FlickrApi";
 import "./PhotoDetail.css";
+import WallPepperApi from "../../api/WallPepperApi";
+import UserContext from "../auth/UserContext";
 
 const PhotoDetail = ({ id, closePhoto }) => {
 	const photoBackgroundRef = useRef();
+	const { currentUser } = useContext(UserContext);
 	const [photoData, setPhotoData] = useState({});
 	const [doneLoading, setDoneLoading] = useState(false);
+
+	const likePic = async (url) => {
+		try {
+			let { username } = currentUser;
+			await WallPepperApi.like(username, url);
+		} catch (err) {
+			console.error("like failed");
+			return { success: false, err };
+		}
+	};
 
 	// Get photo data when page loads
 	useEffect(() => {
@@ -67,6 +80,12 @@ const PhotoDetail = ({ id, closePhoto }) => {
 							}}>
 							Crop
 						</Link>
+						<button
+							onClick={() => likePic(
+								`https://live.staticflickr.com/${photoData.server}/${photoData.id}_${photoData.secret}.jpg`
+							)}>
+							Like
+						</button>
 					</div>
 				</div>
 			</div>
