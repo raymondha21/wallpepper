@@ -1,5 +1,15 @@
 import React, { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import {
+	Form,
+	FormGroup,
+	Label,
+	Input,
+	Button,
+	Container,
+	Row,
+	Col,
+} from "reactstrap";
 import Alert from "../../common/Alert";
 
 /** Login form.
@@ -19,6 +29,7 @@ function LoginForm({ login }) {
 		password: "",
 	});
 	const [formErrors, setFormErrors] = useState([]);
+	const navigate = useNavigate();
 
 	console.debug(
 		"LoginForm",
@@ -39,7 +50,7 @@ function LoginForm({ login }) {
 		evt.preventDefault();
 		let result = await login(formData);
 		if (result.success) {
-			return <Navigate to exact="/" replace={true} />;
+			navigate('/');
 		} else {
 			setFormErrors(result.errors);
 		}
@@ -52,51 +63,47 @@ function LoginForm({ login }) {
 	}
 
 	return (
-		<div className="LoginForm">
-			<div className="container col-md-6 offset-md-3 col-lg-4 offset-lg-4">
-				<h3 className="mb-3">Log In</h3>
+		<Container className="LoginForm">
+			<Row className="justify-content-center">
+				<Col md={6} lg={4}>
+					<h3 className="mb-3">Log In</h3>
+					<Form onSubmit={handleSubmit}>
+						<FormGroup>
+							<Label for="username">Username</Label>
+							<Input
+								type="text"
+								name="username"
+								id="username"
+								value={formData.username}
+								onChange={handleChange}
+								autoComplete="username"
+								required
+							/>
+						</FormGroup>
+						<FormGroup>
+							<Label for="password">Password</Label>
+							<Input
+								type="password"
+								name="password"
+								id="password"
+								value={formData.password}
+								onChange={handleChange}
+								autoComplete="current-password"
+								required
+							/>
+						</FormGroup>
 
-				<div className="card">
-					<div className="card-body">
-						<form onSubmit={handleSubmit}>
-							<div className="form-group">
-								<label>Username</label>
-								<input
-									name="username"
-									className="form-control"
-									value={formData.username}
-									onChange={handleChange}
-									autoComplete="username"
-									required
-								/>
-							</div>
-							<div className="form-group">
-								<label>Password</label>
-								<input
-									type="password"
-									name="password"
-									className="form-control"
-									value={formData.password}
-									onChange={handleChange}
-									autoComplete="current-password"
-									required
-								/>
-							</div>
+						{formErrors.length ? (
+							<Alert type="danger" messages={formErrors} />
+						) : null}
 
-							{formErrors.length ? (
-								<Alert type="danger" messages={formErrors} />
-							) : null}
-
-							<button
-								className="btn btn-primary float-right"
-								onSubmit={handleSubmit}>
-								Submit
-							</button>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
+						<Button type="submit" color="primary" className="float-right">
+							Submit
+						</Button>
+					</Form>
+				</Col>
+			</Row>
+		</Container>
 	);
 }
 

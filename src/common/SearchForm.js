@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Form, FormGroup, Input, Button } from "reactstrap";
 import "./SearchForm.css";
 import { Link } from "react-router-dom";
 
@@ -33,23 +34,23 @@ function SearchForm({ searchFor }) {
 	}
 
 	return (
-		<div className="SearchForm mb-4">
-			<form className="form-inline" onSubmit={handleSubmit}>
-				<input
-					className="form-control form-control-lg flex-grow-1"
+		<Form className="mb-4" onSubmit={handleSubmit}>
+			<FormGroup>
+				<Input
+					type="text"
 					name="searchTerm"
-					placeholder="Search all wallpapers"
+					placeholder="Search"
 					value={searchTerm}
 					onChange={handleChange}
 				/>
-				<Link className="btn btn-lg btn-secondary p-2 m-2" to="/photos/upload">
-					Upload your own!
-				</Link>
-				<button type="submit" className="btn btn-lg btn-primary">
-					Search
-				</button>
-			</form>
-		</div>
+			</FormGroup>
+			<Link className="btn btn-secondary p-2 m-2" to="/photos/upload">
+				Upload your own!
+			</Link>
+			<Button type="submit" color="primary">
+				Search
+			</Button>
+		</Form>
 	);
 }
 

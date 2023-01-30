@@ -1,11 +1,10 @@
 import React, { useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
+import { Container } from "reactstrap";
 
 import ReactCrop, {
 	centerCrop,
 	makeAspectCrop,
-	Crop,
-	PixelCrop,
 } from "react-image-crop";
 import { canvasPreview } from "./canvasPreview";
 import { useDebounceEffect } from "./useDebounceEffect";
@@ -94,75 +93,77 @@ function PhotoCrop() {
 	}
 
 	return (
-		<div className="PhotoCrop">
-			<div className="SearchForm mb-4">
-				<input
-					className="form-inline"
-					type="file"
-					accept="image/*"
-					onChange={onSelectFile}
-				/>
-				<div>
-					<label htmlFor="scale-input">Scale: </label>
+		<Container>
+			<div className="PhotoCrop">
+				<div className="SearchForm mb-4">
 					<input
-						cl
-						id="scale-input"
-						type="number"
-						step="0.1"
-						value={scale}
-						disabled={!imgSrc}
-						onChange={(e) => setScale(Number(e.target.value))}
+						className="form-inline"
+						type="file"
+						accept="image/*"
+						onChange={onSelectFile}
 					/>
+					<div>
+						<label htmlFor="scale-input">Scale: </label>
+						<input
+							cl
+							id="scale-input"
+							type="number"
+							step="0.1"
+							value={scale}
+							disabled={!imgSrc}
+							onChange={(e) => setScale(Number(e.target.value))}
+						/>
+					</div>
+					<div>
+						<label htmlFor="rotate-input">Rotate: </label>
+						<input
+							id="rotate-input"
+							type="number"
+							value={rotate}
+							disabled={!imgSrc}
+							onChange={(e) =>
+								setRotate(Math.min(180, Math.max(-180, Number(e.target.value))))
+							}
+						/>
+					</div>
+					<div>
+						<button
+							className="btn btn-md btn-primary "
+							onClick={handleToggleAspectClick}>
+							Toggle aspect {aspect ? "off" : "on"}
+						</button>
+					</div>
 				</div>
-				<div>
-					<label htmlFor="rotate-input">Rotate: </label>
-					<input
-						id="rotate-input"
-						type="number"
-						value={rotate}
-						disabled={!imgSrc}
-						onChange={(e) =>
-							setRotate(Math.min(180, Math.max(-180, Number(e.target.value))))
-						}
-					/>
-				</div>
-				<div>
-					<button
-						className="btn btn-md btn-primary "
-						onClick={handleToggleAspectClick}>
-						Toggle aspect {aspect ? "off" : "on"}
-					</button>
-				</div>
-			</div>
-			{!!imgSrc && (
-				<ReactCrop
-					crop={crop}
-					onChange={(_, percentCrop) => setCrop(percentCrop)}
-					onComplete={(c) => setCompletedCrop(c)}
-					aspect={aspect}>
-					<img
-						ref={imgRef}
-						alt="Crop me"
-						src={imgSrc}
-						style={{ transform: `scale(${scale}) rotate(${rotate}deg)` }}
-						onLoad={onImageLoad}
-					/>
-				</ReactCrop>
-			)}
-			<div>
-				{!!completedCrop && (
-					<canvas
-						ref={previewCanvasRef}
-						style={{
-							border: "1px solid black",
-							objectFit: "contain",
-							width: completedCrop.width,
-							height: completedCrop.height,
-						}}
-					/>
+				{!!imgSrc && (
+					<ReactCrop
+						crop={crop}
+						onChange={(_, percentCrop) => setCrop(percentCrop)}
+						onComplete={(c) => setCompletedCrop(c)}
+						aspect={aspect}>
+						<img
+							ref={imgRef}
+							alt="Crop me"
+							src={imgSrc}
+							style={{ transform: `scale(${scale}) rotate(${rotate}deg)` }}
+							onLoad={onImageLoad}
+						/>
+					</ReactCrop>
 				)}
+				<div>
+					{!!completedCrop && (
+						<canvas
+							ref={previewCanvasRef}
+							style={{
+								border: "1px solid black",
+								objectFit: "contain",
+								width: completedCrop.width,
+								height: completedCrop.height,
+							}}
+						/>
+					)}
+				</div>
 			</div>
-		</div>
+		</Container>
 	);
 }
 

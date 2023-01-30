@@ -9,5 +9,5 @@ export function useDebounceEffect(fn, waitTime, deps) {
 		return () => {
 			clearTimeout(t);
 		};
-	}, deps);
+	}, [fn,deps, waitTime]);
 }

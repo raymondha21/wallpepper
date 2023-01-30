@@ -14,9 +14,8 @@ const UserProfile = () => {
 		firstName: currentUser.firstName,
 		lastName: currentUser.lastName,
 		email: currentUser.email,
-		password: "",
+		"current-password": "",
 	});
-
 	const [displaySaveAlert, setDisplaySaveAlert] = useState(false);
 
 	function handleChange(evt) {
@@ -82,8 +81,8 @@ const UserProfile = () => {
 						<div className="form-group">
 							<label>Confirm password to make changes:</label>
 							<input
-								type="password"
-								name="password"
+								type="current-password"
+								name="current-password"
 								className="form-control"
 								value={formData.password}
 								onChange={handleChange}
@@ -100,18 +99,6 @@ const UserProfile = () => {
 						</button>
 					</form>
 				</div>
-			</div>
-			<div>
-				<h4>User likes:</h4>
-				{currentUser.likes.length ? (
-					<div className="PhotoCard-list ">
-						{currentUser.likes.map((l) => (
-							<img src={l.url}></img>
-						))}
-					</div>
-				) : (
-					<p className="lead">Sorry, no results were found!</p>
-				)}
 			</div>
 		</div>
 	);

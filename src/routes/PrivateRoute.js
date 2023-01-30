@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import UserContext from "../auth/UserContext";
 
 /** "Higher-Order Component" for private routes.
@@ -11,13 +11,14 @@ import UserContext from "../auth/UserContext";
 
 const PrivateRoute = ({children})  => {
   const { currentUser } = useContext(UserContext);
+  const navigate = useNavigate();
 
   console.debug(
       "PrivateRoute",
       "currentUser=", currentUser,
   );
 
-  return currentUser ? children : <Navigate to="/login"/>;
+  return currentUser ? children : navigate("/login");
 }
 
 export default PrivateRoute;
