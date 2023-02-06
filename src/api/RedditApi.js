@@ -8,11 +8,7 @@ const BASE_URL = "https://www.reddit.com";
  */
 
 class RedditApi {
-   static token;
-
 	static async request(endpoint, method = "get") {
-		console.debug("API Call:", endpoint, method);
-
 		const url = `${BASE_URL}/${endpoint}`;
 
 		try {
@@ -24,13 +20,16 @@ class RedditApi {
 	// Individual API routes
 
 	// Get info on current user
-	static async getPopular(subreddit) {
-		let res = await this.request(`/r/${subreddit}.json`);
+	static async getPopular(subreddit, lastId = "") {
+		let res = await this.request(`/r/${subreddit}.json?limit=25&${lastId}`);
 		return res.data.children;
 	}
 
-	static async search(searchTerm) {
-		let res = await this.request(`/r/wallpapers/search.json?q=${searchTerm}&restrict_sr=1`);
+	static async search(searchTerm, subreddit, lastId = "") {
+		let res = await this.request(
+			`/r/${subreddit}/search.json?q=${searchTerm}&restrict_sr=1&limit=25&${lastId}`
+		);
+		console.log(res);
 		return res.data.children;
 	}
 
@@ -39,7 +38,6 @@ class RedditApi {
 		let res = await this.request(`${url}.json`);
 		return res[0].data.children[0].data;
 	}
-
 }
 
 export default RedditApi;

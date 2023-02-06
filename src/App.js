@@ -119,7 +119,7 @@ function App() {
 					}}>
 					<Navbar logout={logout} />
 					<AllRoutes login={login} signup={signup} />
-					{ openPhotoModal && <PhotoDetail
+					{openPhotoModal && <PhotoDetail
 							photoModalData={photoModalData}
 							closePhoto={() => setOpenPhotoModal(false)}
 						/>}

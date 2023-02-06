@@ -1,14 +1,18 @@
 import React, { useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
-import { Container } from "reactstrap";
-
-import ReactCrop, {
-	centerCrop,
-	makeAspectCrop,
-} from "react-image-crop";
+import { Container, Row, Col } from "reactstrap";
+import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
 import { canvasPreview } from "./canvasPreview";
 import { useDebounceEffect } from "./useDebounceEffect";
-
+import {
+	FormGroup,
+	Label,
+	Input,
+	DropdownItem,
+	DropdownMenu,
+	DropdownToggle,
+	UncontrolledDropdown,
+} from "reactstrap";
 import "react-image-crop/dist/ReactCrop.css";
 
 function centerAspectCrop(mediaWidth, mediaHeight, aspect) {
@@ -32,7 +36,6 @@ function centerAspectCrop(mediaWidth, mediaHeight, aspect) {
 
 function PhotoCrop() {
 	const location = useLocation();
-	console.log(location);
 	const [imgSrc, setImgSrc] = useState(location.state?.image || "");
 	const previewCanvasRef = useRef(null);
 	const imgRef = useRef(null);
@@ -40,7 +43,8 @@ function PhotoCrop() {
 	const [completedCrop, setCompletedCrop] = useState();
 	const [scale, setScale] = useState(1);
 	const [rotate, setRotate] = useState(0);
-	const [aspect, setAspect] = useState(16 / 9);
+	const [aspect, setAspect] = useState();
+	const [defaultAspect, setDefaultAspect] = useState();
 
 	function onSelectFile(e) {
 		if (e.target.files && e.target.files.length > 0) {
@@ -54,10 +58,11 @@ function PhotoCrop() {
 	}
 
 	function onImageLoad(e) {
-		if (aspect) {
-			const { width, height } = e.currentTarget;
-			setCrop(centerAspectCrop(width, height, aspect));
-		}
+		const { width, height } = e.currentTarget;
+		setCrop(centerAspectCrop(width, height, width / height));
+		setAspect(width / height);
+		setDefaultAspect(width / height);
+		
 	}
 
 	useDebounceEffect(
@@ -66,7 +71,8 @@ function PhotoCrop() {
 				completedCrop?.width &&
 				completedCrop?.height &&
 				imgRef.current &&
-				previewCanvasRef.current
+				previewCanvasRef.current &&
+				aspect
 			) {
 				// We use canvasPreview as it's much faster than imgPreview.
 				canvasPreview(
@@ -79,89 +85,113 @@ function PhotoCrop() {
 			}
 		},
 		100,
-		[completedCrop, scale, rotate]
+		[completedCrop, scale, rotate, aspect,handleToggleAspectClick]
 	);
 
-	function handleToggleAspectClick() {
+	function handleToggleAspectClick(e) {
 		if (aspect) {
 			setAspect(undefined);
-		} else if (imgRef.current) {
+		}
+		if (imgRef.current) {
 			const { width, height } = imgRef.current;
-			setAspect(16 / 9);
-			setCrop(centerAspectCrop(width, height, 16 / 9));
+			setAspect(e.target.value);
+			setCrop(centerAspectCrop(width, height, e.target.value));
 		}
 	}
 
 	return (
-		<Container>
+		<Container className="pt-2">
+			<h2 className="p-2">Image Cropper</h2>
 			<div className="PhotoCrop">
-				<div className="SearchForm mb-4">
-					<input
-						className="form-inline"
-						type="file"
-						accept="image/*"
-						onChange={onSelectFile}
-					/>
-					<div>
-						<label htmlFor="scale-input">Scale: </label>
-						<input
-							cl
-							id="scale-input"
-							type="number"
-							step="0.1"
-							value={scale}
-							disabled={!imgSrc}
-							onChange={(e) => setScale(Number(e.target.value))}
+				<Row className="p-4">
+					<Col>
+						<FormGroup className="SearchForm mb-4">
+							<FormGroup className="d-flex align-items-center">
+								<Label for="scale-input" className="mr-2">
+									Scale:
+								</Label>
+								<Input
+									type="number"
+									id="scale-input"
+									step="0.1"
+									value={scale}
+									disabled={!imgSrc}
+									onChange={(e) => setScale(Number(e.target.value))}
+								/>
+							</FormGroup>
+							<FormGroup className="d-flex align-items-center">
+								<Label for="rotate-input" className="mr-2">
+									Rotate:
+								</Label>
+								<Input
+									type="number"
+									id="rotate-input"
+									value={rotate}
+									disabled={!imgSrc}
+									onChange={(e) =>
+										setRotate(
+											Math.min(180, Math.max(-180, Number(e.target.value)))
+										)
+									}
+								/>
+							</FormGroup>
+							<FormGroup className="d-flex align-items-center">
+								<Label for="aspectSelect">Aspect:</Label>
+								<Input
+									type="select"
+									id="aspectSelect"
+									value={aspect}
+									onChange={handleToggleAspectClick}>
+									<option value={defaultAspect} selected>Default</option>
+									<option value={16 / 9}>16:9</option>
+									<option value={4 / 3}>4:3</option>
+									<option value={1}>1</option>
+								</Input>
+							</FormGroup>
+						</FormGroup>
+					</Col>
+					<Col>
+						<Input
+							type="file"
+							accept="image/*"
+							onChange={onSelectFile}
+							className="mb-2"
 						/>
-					</div>
-					<div>
-						<label htmlFor="rotate-input">Rotate: </label>
-						<input
-							id="rotate-input"
-							type="number"
-							value={rotate}
-							disabled={!imgSrc}
-							onChange={(e) =>
-								setRotate(Math.min(180, Math.max(-180, Number(e.target.value))))
-							}
-						/>
-					</div>
-					<div>
-						<button
-							className="btn btn-md btn-primary "
-							onClick={handleToggleAspectClick}>
-							Toggle aspect {aspect ? "off" : "on"}
-						</button>
-					</div>
-				</div>
-				{!!imgSrc && (
-					<ReactCrop
-						crop={crop}
-						onChange={(_, percentCrop) => setCrop(percentCrop)}
-						onComplete={(c) => setCompletedCrop(c)}
-						aspect={aspect}>
-						<img
-							ref={imgRef}
-							alt="Crop me"
-							src={imgSrc}
-							style={{ transform: `scale(${scale}) rotate(${rotate}deg)` }}
-							onLoad={onImageLoad}
-						/>
-					</ReactCrop>
-				)}
-				<div>
-					{!!completedCrop && (
-						<canvas
-							ref={previewCanvasRef}
-							style={{
-								border: "1px solid black",
-								objectFit: "contain",
-								width: completedCrop.width,
-								height: completedCrop.height,
-							}}
-						/>
-					)}
-				</div>
+					</Col>
+				</Row>
+
+				<Row>
+					<Col xs="12" md="6">
+						{!!imgSrc && (
+							<ReactCrop
+								crop={crop}
+								onChange={(_, percentCrop) => setCrop(percentCrop)}
+								onComplete={(c) => setCompletedCrop(c)}
+								aspect={aspect}>
+								<img
+									ref={imgRef}
+									alt="Crop me"
+									src={imgSrc}
+									style={{ transform: `scale(${scale}) rotate(${rotate}deg)` }}
+									onLoad={onImageLoad}
+								/>
+							</ReactCrop>
+						)}
+					</Col>
+					<Col xs="12" md="6">
+						{!!completedCrop && (
+							<canvas
+								ref={previewCanvasRef}
+								style={{
+									border: "1px solid black",
+									objectFit: "contain",
+									width: completedCrop.width,
+									height: completedCrop.height,
+								}}
+							/>
+						)}
+					</Col>
+				</Row>
 			</div>
 		</Container>
 	);

@@ -88,7 +88,7 @@ function LoginForm({ login }) {
 								id="password"
 								value={formData.password}
 								onChange={handleChange}
-								autoComplete="current-password"
+								autoComplete="password"
 								required
 							/>
 						</FormGroup>

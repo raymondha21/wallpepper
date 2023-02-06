@@ -16,7 +16,6 @@ import { Link } from "react-router-dom";
  */
 
 function SearchForm({ searchFor }) {
-	console.debug("SearchForm", "searchFor=", typeof searchFor);
 
 	const [searchTerm, setSearchTerm] = useState("");
 
@@ -44,7 +43,7 @@ function SearchForm({ searchFor }) {
 					onChange={handleChange}
 				/>
 			</FormGroup>
-			<Link className="btn btn-secondary p-2 m-2" to="/photos/upload">
+			<Link className="btn btn-secondary m-1" to="/photos/upload">
 				Upload your own!
 			</Link>
 			<Button type="submit" color="primary">

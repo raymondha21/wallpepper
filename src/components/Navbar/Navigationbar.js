@@ -19,7 +19,6 @@ const Navigationbar = ({ logout }) => {
 	const loggedInNav = () => {
 		return (
 			<>
-
 					<UncontrolledDropdown nav inNavbar>
 						<DropdownToggle nav caret>
 							{currentUser.username}
@@ -33,7 +32,6 @@ const Navigationbar = ({ logout }) => {
 							</DropdownItem>
 						</DropdownMenu>
 					</UncontrolledDropdown>
-				
 			</>
 		);
 	};
@@ -51,17 +49,18 @@ const Navigationbar = ({ logout }) => {
 						Signup
 					</NavLink>
 				</NavItem>
-				
 			</>
 		);
 	};
 
 	return (
-		<div>
 			<Navbar container="lg">
 				<NavbarBrand href="/">WallPepper</NavbarBrand>
 				<Nav tabs fill>
-					<NavItem nav>
+					<NavItem>
+						<NavLink href="/">Home</NavLink>
+					</NavItem>
+					<NavItem>
 						<NavLink href="/mobile">Mobile</NavLink>
 					</NavItem>
 					<UncontrolledDropdown nav inNavbar>
@@ -72,15 +71,14 @@ const Navigationbar = ({ logout }) => {
 							<DropdownItem href="/sky">Sky Wallpapers</DropdownItem>
 							<DropdownItem href="/city">City Wallpapers</DropdownItem>
 							<DropdownItem href="/anime">Anime Wallpapers</DropdownItem>
-						</DropdownMenu>
+						</DropdownMenu> 
 					</UncontrolledDropdown>
-					<NavItem nav>
+					<NavItem>
 						<NavLink href="/photos/upload">Upload</NavLink>
 					</NavItem>
 					{currentUser ? loggedInNav() : loggedOutNav()}
 				</Nav>
 			</Navbar>
-		</div>
 	);
 };
 
